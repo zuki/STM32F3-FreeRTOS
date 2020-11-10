@@ -1,0 +1,22 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{c,l,y,h,s,S,rs,asm,v,vhd,php}]
+indent_size = 4
+
+[Makefile,*.mak]
+indent_style = tab
+indent_size = 2
+
+[*.py]
+indent_style = tab
+indent_size = 4
