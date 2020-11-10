@@ -36,6 +36,7 @@ ASRC=startup_stm32f303xc.s
 
 # Project Source Files
 #SRC+=stm32f3xx_it.c
+SRC+=stm32f3xx_hal_msp.c
 SRC+=system_stm32f3xx.c
 SRC+=main.c
 SRC+=syscalls.c

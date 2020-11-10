@@ -22,6 +22,7 @@
 #include "stm32f3xx.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include <stdio.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -48,6 +49,7 @@ void pvTask2Func(void *argument);
   */
 int main(void)
 {
+  setbuf(stdout, NULL);
 
   /* STM32F3xx HAL library initialization:
        - Configure the Flash prefetch
@@ -65,6 +67,8 @@ int main(void)
   SystemClock_Config();
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+
+  
 
   /* Add your application code here
      */
@@ -86,28 +90,20 @@ int main(void)
   */
 static void MX_USART1_UART_Init(void)
 {
-
-  /* USER CODE BEGIN USART1_Init 0 */
-
-  /* USER CODE END USART1_Init 0 */
-
-  /* USER CODE BEGIN USART1_Init 1 */
-
-  /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
   huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
   huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
-    Error_Handler();
+      Error_Handler();
   }
-  /* USER CODE BEGIN USART1_Init 2 */
-
-  /* USER CODE END USART1_Init 2 */
-
 }
 
 /**
@@ -121,7 +117,6 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, LED4_PIN|LED3_PIN|LED5_PIN
@@ -138,7 +133,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
 }
 
 /**
@@ -193,10 +187,12 @@ void SystemClock_Config(void)
 void pvTask1Func(void * argument)
 {
   /* USER CODE BEGIN 5 */
+  printf("start Task1\r\n");
   /* Infinite loop */
   for(;;)
   {
     HAL_GPIO_TogglePin(LED5_GPIO_PORT, LED5_PIN);
+    printf("Task1 run\r\n");
 	  vTaskDelay(1000/portTICK_RATE_MS);
   }
   /* USER CODE END 5 */
@@ -205,11 +201,13 @@ void pvTask1Func(void * argument)
 void pvTask2Func(void * argument)
 {
   /* USER CODE BEGIN 5 */
+  printf("start Task2\r\n");
   /* Infinite loop */
   for(;;)
   {
 	  HAL_GPIO_TogglePin(LED4_GPIO_PORT, LED4_PIN);
-	  vTaskDelay(500/portTICK_RATE_MS);
+    printf("Task2 run\r\n");
+    vTaskDelay(500/portTICK_RATE_MS);
   }
   /* USER CODE END 5 */
 }
@@ -224,6 +222,7 @@ static void Error_Handler(void)
   /* User may add here some code to deal with this error */
   while(1)
   {
+      HAL_GPIO_WritePin(LED10_GPIO_PORT, LED10_PIN, GPIO_PIN_SET);
   }
 }
 
